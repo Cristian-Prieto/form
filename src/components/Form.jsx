@@ -48,7 +48,7 @@ export function Form() {
           Ingresa tus datos
         </div>
         { !errorInForm ? 
-        <div className={styles.normal} ></div> : 
+        <div className={styles.normal} >HOLA PUTO</div> : 
         <div className={styles.error} >error</div> 
         }
          
