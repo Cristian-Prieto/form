@@ -1,66 +1,79 @@
 import React, { useState } from "react";
 import styles from "./Form.module.css";
 
+const INITIAL_FORM = {
+  firstName: "",
+  lastName: "",
+  email: "",
+};
+
 export function Form() {
-  const [values, setValues] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-  })
+  const [values, setValues] = useState(INITIAL_FORM);
 
-  const [registrado, setRegistrado] = useState( false );
-  const [errorInForm, setErrorInForm] = useState( false );
+  const [registrado, setRegistrado] = useState(false);
+  const [errorInForm, setErrorInForm] = useState(false);
 
-  const handleFirstNameChange = (e) => {
-
-    setValues({ ...values, firstName: e.target.value })
-  
-  }
-
-  const handleLastNameChange = (e) => {
-
-    setValues({ ...values, lastName: e.target.value })
-  
-  }
-
-  const handleEmailChange = (e) => {
-
-    setValues({ ...values, email: e.target.value })
-  
-  }
+  const handleChange = (e) => {
+    console.log({ inputName: e.target.name, inputValue: e.target.value });
+    if (errorInForm) {
+      setErrorInForm(false);
+    }
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
 
   const handleFakeRegister = (e) => {
     e.preventDefault();
-    
-    if( !values.firstName || !values.lastName || !values.email ) {
-      setErrorInForm( true );
+
+    if (!values.firstName || !values.lastName || !values.email) {
+      setErrorInForm(true);
       return;
     }
-    setRegistrado(true)
-  }
 
+    setRegistrado(true);
+  };
 
+  const reset = () => {
+    setValues(INITIAL_FORM);
+    setRegistrado(false);
+  };
 
   return (
     <div className={styles.div}>
-      <form onSubmit={ handleFakeRegister } className={styles.form}>
-        <div>
-          Ingresa tus datos
-        </div>
-        { !errorInForm ? 
-        <div className={styles.normal} >HOLA PUTO</div> : 
-        <div className={styles.error} >error</div> 
-        }
-         
- 
-
-       
-       
-        <input value={values.firstName} type="text" className={styles.input} placeholder="First name" onChange={handleFirstNameChange} />
-        <input value={values.lastName} type="text" className={styles.input} placeholder="Last name" onChange={handleLastNameChange} />
-        <input value={values.email} className={styles.input} placeholder="e-mail" onChange={handleEmailChange} />
-        <button type="submit">registrarme</button>
-      </form>
+      <div>Ingresa tus datos</div>
+      {errorInForm && <div className={styles.error}>error</div>}
+      {registrado ? (
+        <>
+          <div className={styles.normal}>Hola {values.firstName}, bienvenido al mundo real!</div>
+          <button onClick={reset}>Logout</button>
+        </>
+      ) : (
+        <form onSubmit={handleFakeRegister} className={styles.form}>
+          <input
+            name="firstName"
+            value={values.firstName}
+            type="text"
+            className={styles.input}
+            placeholder="First name"
+            onChange={handleChange}
+          />
+          <input
+            name="lastName"
+            value={values.lastName}
+            type="text"
+            className={styles.input}
+            placeholder="Last name"
+            onChange={handleChange}
+          />
+          <input
+            name="email"
+            value={values.email}
+            className={styles.input}
+            placeholder="e-mail"
+            onChange={handleChange}
+          />
+          <button type="submit">registrarme</button>
+        </form>
+      )}
     </div>
-  )
+  );
 }
